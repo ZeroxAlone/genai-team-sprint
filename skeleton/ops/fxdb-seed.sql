@@ -1,5 +1,6 @@
 -- FX Exchange seed data (Week 1 Day 3). Import into schema `fxdb`.
 USE fxdb;
+SET NAMES utf8mb4;  -- read this file's bytes as UTF-8 so €/£/¥ import correctly (not latin1)
 SET FOREIGN_KEY_CHECKS=0;
 DROP TABLE IF EXISTS transfer, fx_rate, account, currency;
 SET FOREIGN_KEY_CHECKS=1;

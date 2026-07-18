@@ -9,8 +9,13 @@ import java.util.Map;
 
 /**
  * Global error handling — a customer never sees a Java stack trace.
- * This is the BASELINE: bad input -> 400 with a clean JSON message; anything unexpected
- * -> 500 with a generic message (no internals leaked).
+ * BASELINE: bad input (an IllegalArgumentException) -> 400 with a clean JSON message.
+ *
+ * We deliberately do NOT add a catch-all {@code @ExceptionHandler(Exception.class)}: that
+ * would swallow Spring's own web exceptions (e.g. NoResourceFoundException) and turn honest
+ * 404s into 500s. Unexpected errors are handled by Spring Boot's default error path, which —
+ * with server.error.include-stacktrace=never / include-message=never in application.properties
+ * — already returns a clean response with no stack trace to the browser.
  *
  * When you build the "validation & error handling" requirement, EXTEND this class:
  * add a 404 for an unknown currency pair, field-level validation messages, etc.
@@ -22,12 +27,5 @@ public class ApiExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Map<String, String> badRequest(IllegalArgumentException ex) {
         return Map.of("error", ex.getMessage() == null ? "bad request" : ex.getMessage());
-    }
-
-    @ExceptionHandler(Exception.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public Map<String, String> fallback(Exception ex) {
-        // Deliberately generic — no stack trace, no internal detail to the browser.
-        return Map.of("error", "Something went wrong. Please try again.");
     }
 }
