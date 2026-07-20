@@ -7,6 +7,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -65,5 +66,29 @@ class RateControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isArray())
                 .andExpect(jsonPath("$").isEmpty());
+    }
+
+    @Test
+    void singlePairLookupReturnsEurUsdCheckpoint() throws Exception {
+        // 02-pair-lookup AC1: GET /api/rates/EUR/USD -> 200 + one object, rate 1.0818
+        when(repo.findRate("EUR", "USD"))
+                .thenReturn(Optional.of(new Rate("EUR", "USD", "1.0818", "2026-01-12")));
+
+        mvc.perform(get("/api/rates/EUR/USD"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.base").value("EUR"))
+                .andExpect(jsonPath("$.quote").value("USD"))
+                .andExpect(jsonPath("$.rate").value("1.0818"))
+                .andExpect(jsonPath("$.rateDate").value("2026-01-12"));
+    }
+
+    @Test
+    void singlePairLookupReturns404ForUnknownPair() throws Exception {
+        // 02-pair-lookup AC2: unknown pair -> 404 + JSON {error}, no stack trace
+        when(repo.findRate("EUR", "XXX")).thenReturn(Optional.empty());
+
+        mvc.perform(get("/api/rates/EUR/XXX"))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.error").exists());
     }
 }
