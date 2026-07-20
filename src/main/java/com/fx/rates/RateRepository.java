@@ -5,6 +5,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Rate repository — queries the fx_rate table for the latest exchange rate per pair.
@@ -43,5 +44,20 @@ public class RateRepository {
                 ORDER BY base_code, quote_code
                 """;
         return jdbc.query(sql, MAPPER);
+    }
+
+    /**
+     * Find the latest rate for a single pair (02-pair-lookup AC1/AC2).
+     * Returns empty when the pair doesn't exist -> controller turns that into a 404.
+     */
+    public Optional<Rate> findRate(String base, String quote) {
+        String sql = """
+                SELECT base_code, quote_code, rate, DATE_FORMAT(rate_date, '%Y-%m-%d') as rate_date
+                FROM fx_rate
+                WHERE base_code = ? AND quote_code = ?
+                ORDER BY rate_date DESC
+                LIMIT 1
+                """;
+        return jdbc.query(sql, MAPPER, base, quote).stream().findFirst();
     }
 }

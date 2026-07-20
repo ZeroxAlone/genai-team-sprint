@@ -11,6 +11,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.MountableFile;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -79,5 +80,21 @@ class RateRepositoryIT {
         List<Rate> rates = repo.findLatestRates();
         assertThat(rates)
                 .allMatch(r -> "2026-01-12".equals(r.rateDate()));
+    }
+
+    @Test
+    void findRateReturnsTheEurUsdCheckpoint() {
+        // 02-pair-lookup AC1: EUR/USD -> rate 1.0818
+        Optional<Rate> rate = repo.findRate("EUR", "USD");
+        assertThat(rate).isPresent();
+        assertThat(rate.get().rate()).isEqualTo("1.0818");
+        assertThat(rate.get().rateDate()).isEqualTo("2026-01-12");
+    }
+
+    @Test
+    void findRateIsEmptyForAnUnknownPair() {
+        // 02-pair-lookup AC2: unknown pair -> empty (controller turns this into a 404)
+        Optional<Rate> rate = repo.findRate("EUR", "XXX");
+        assertThat(rate).isEmpty();
     }
 }

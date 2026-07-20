@@ -31,3 +31,28 @@ async function loadRates() {
 }
 
 loadRates();
+
+// --- Single-pair lookup: GET /api/rates/{base}/{quote} (02-pair-lookup) ---
+async function lookupPair(event) {
+  event.preventDefault();                       // don't reload the page
+  const form = event.target;
+  const result = document.getElementById('lookup-result');
+  const base = form.base.value.trim().toUpperCase();
+  const quote = form.quote.value.trim().toUpperCase();
+  try {
+    const res = await fetch(`/api/rates/${base}/${quote}`);
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.error || ('HTTP ' + res.status));   // show the API's 404 message
+    }
+    const rate = await res.json();
+    result.textContent = `${rate.base}/${rate.quote} = ${rate.rate} (as of ${rate.rateDate})`;
+    result.classList.remove('err');
+  } catch (err) {
+    result.textContent = 'Could not look up pair: ' + err.message;
+    result.classList.add('err');
+  }
+}
+
+document.getElementById('lookup-form').addEventListener('submit', lookupPair);
+

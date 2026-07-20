@@ -36,6 +36,19 @@
       </table>
       <p id="status" class="status"></p>
     </div>
+
+    <div class="panel">
+      <h2>Look up a pair</h2>
+      <p class="lede" style="margin-bottom:.6rem">
+        Read a single rate via <span class="mono">GET /api/rates/{base}/{quote}</span>.
+      </p>
+      <form id="lookup-form" autocomplete="off">
+        <input name="base" maxlength="3" placeholder="Base (e.g. EUR)" required style="text-transform:uppercase">
+        <input name="quote" maxlength="3" placeholder="Quote (e.g. USD)" required style="text-transform:uppercase">
+        <button type="submit">Look up</button>
+      </form>
+      <p id="lookup-result" class="status"></p>
+    </div>
   </main>
 
   <script src="/js/rates.js"></script>
