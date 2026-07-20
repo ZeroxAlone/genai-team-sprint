@@ -1,0 +1,11 @@
+<settings>
+    <proxies>
+        <proxy>
+            <id>clash</id>
+            <active>true</active>
+            <protocol>http</protocol>
+            <host>host.docker.internal</host>
+            <port>7890</port>
+        </proxy>
+    </proxies>
+</settings>
