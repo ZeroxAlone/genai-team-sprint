@@ -5,6 +5,7 @@ import java.math.RoundingMode;
 import java.util.List;
 import java.util.Map;
 
+import com.fx.rates.RateNotFoundException;
 import com.fx.transfer.TransferRepository;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -49,8 +50,7 @@ public class ConvertController {
                 base.toUpperCase(), quote.toUpperCase());
 
         if (rates.isEmpty()) {
-            throw new IllegalArgumentException(
-                    "no rate found for " + base.toUpperCase() + "/" + quote.toUpperCase());
+            throw new RateNotFoundException(base.toUpperCase(), quote.toUpperCase());
         }
 
         BigDecimal rate      = rates.get(0);

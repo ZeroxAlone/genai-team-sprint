@@ -73,7 +73,8 @@ class ConvertControllerTest {
                         .param("quote", "USD")
                         .param("amount", "0"))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.error").exists());
+                .andExpect(jsonPath("$.error").exists())
+                .andExpect(jsonPath("$.trace").doesNotExist());
 
                 verify(transferRepository, never()).addConvertedAmount(anyString(), anyString());
     }
@@ -85,13 +86,39 @@ class ConvertControllerTest {
                         .param("quote", "USD")
                         .param("amount", "-50"))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.error").exists());
+            .andExpect(jsonPath("$.error").exists())
+            .andExpect(jsonPath("$.trace").doesNotExist());
 
                 verify(transferRepository, never()).addConvertedAmount(anyString(), anyString());
     }
 
     @Test
-    void unknownPair_returns400() throws Exception {
+        void missingAmountParam_returns400() throws Exception {
+        mvc.perform(get("/api/convert")
+                .param("base", "EUR")
+                .param("quote", "USD"))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.error").value("missing required parameter: amount"))
+            .andExpect(jsonPath("$.trace").doesNotExist());
+
+        verify(transferRepository, never()).addConvertedAmount(anyString(), anyString());
+        }
+
+        @Test
+        void nonNumericAmount_returns400() throws Exception {
+        mvc.perform(get("/api/convert")
+                .param("base", "EUR")
+                .param("quote", "USD")
+                .param("amount", "abc"))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.error").value("invalid value for amount"))
+            .andExpect(jsonPath("$.trace").doesNotExist());
+
+        verify(transferRepository, never()).addConvertedAmount(anyString(), anyString());
+        }
+
+        @Test
+        void unknownPair_returns404() throws Exception {
         when(jdbc.query(anyString(), ArgumentMatchers.<RowMapper<BigDecimal>>any(), eq("EUR"), eq("XYZ")))
                 .thenReturn(List.of());
 
@@ -99,8 +126,9 @@ class ConvertControllerTest {
                         .param("base", "EUR")
                         .param("quote", "XYZ")
                         .param("amount", "100"))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.error").exists());
+            .andExpect(status().isNotFound())
+            .andExpect(jsonPath("$.error").exists())
+            .andExpect(jsonPath("$.trace").doesNotExist());
 
                 verify(transferRepository, never()).addConvertedAmount(anyString(), anyString());
     }
