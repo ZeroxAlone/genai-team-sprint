@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FX App — Currencies</title>
+  <title>FX App — Transfer History</title>
   <link rel="stylesheet" href="/css/app.css">
 </head>
 <body>
@@ -11,35 +11,32 @@
     <span class="brand"><span class="fx">FX</span> App</span>
     <nav class="menu">
       <a href="index.html">Welcome</a>
-      <a href="currencies.html" class="active">Currencies</a>
+      <a href="currencies.html">Currencies</a>
       <a href="rates.html">Rates</a>
       <a href="convert.html">Convert</a>
-      <a href="#" class="todo">History</a>
+      <a href="/history" class="active">History</a>
     </nav>
   </header>
 
   <main>
-    <h1>Supported currencies</h1>
+    <h1>Transfer history</h1>
     <p class="lede">
-      The complete <strong>sample feature</strong>. This page fetches
-      <span class="mono">/api/currencies</span>, which reads the seeded <span class="mono">currency</span>
-      table via <span class="mono">CurrencyRepository</span>. Backend → API → UI, end to end —
-      copy this shape for Rates, Convert and History.
+      Recorded conversions from <span class="mono">GET /api/transfers</span>, newest first.
     </p>
 
     <div class="panel">
       <table>
         <thead>
-          <tr><th>Code</th><th>Name</th><th>Symbol</th></tr>
+          <tr><th>ID</th><th>From</th><th>To</th><th>Amount</th><th>Currency</th><th>Executed At</th><th>Status</th></tr>
         </thead>
         <tbody id="rows">
-          <tr><td colspan="3" class="status">Loading…</td></tr>
+          <tr><td colspan="7" class="status">Loading…</td></tr>
         </tbody>
       </table>
       <p id="status" class="status"></p>
     </div>
   </main>
 
-  <script src="/js/currencies.js"></script>
+  <script src="/js/history.js"></script>
 </body>
 </html>
