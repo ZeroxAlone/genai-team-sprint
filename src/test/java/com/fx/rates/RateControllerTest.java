@@ -92,4 +92,33 @@ class RateControllerTest {
                                 .andExpect(jsonPath("$.error").exists())
                                 .andExpect(jsonPath("$.trace").doesNotExist());
     }
+
+        @Test
+        void historyReturnsThreeRowsOldestToNewestForEurUsd() throws Exception {
+                // 08 AC1/AC2: /history returns full pair history in ascending date order
+                when(repo.findRateHistory("EUR", "USD")).thenReturn(List.of(
+                                new Rate("EUR", "USD", "1.0812", "2026-01-10"),
+                                new Rate("EUR", "USD", "1.0815", "2026-01-11"),
+                                new Rate("EUR", "USD", "1.0818", "2026-01-12")));
+
+                mvc.perform(get("/api/rates/EUR/USD/history"))
+                                .andExpect(status().isOk())
+                                .andExpect(jsonPath("$").isArray())
+                                .andExpect(jsonPath("$.length()").value(3))
+                                .andExpect(jsonPath("$[0].rateDate").value("2026-01-10"))
+                                .andExpect(jsonPath("$[1].rateDate").value("2026-01-11"))
+                                .andExpect(jsonPath("$[2].rateDate").value("2026-01-12"))
+                                .andExpect(jsonPath("$[2].rate").value("1.0818"));
+        }
+
+        @Test
+        void historyReturnsEmptyArrayForUnknownPair() throws Exception {
+                // 08 AC3: unknown pair -> 200 + []
+                when(repo.findRateHistory("EUR", "XXX")).thenReturn(List.of());
+
+                mvc.perform(get("/api/rates/EUR/XXX/history"))
+                                .andExpect(status().isOk())
+                                .andExpect(jsonPath("$").isArray())
+                                .andExpect(jsonPath("$").isEmpty());
+        }
 }
