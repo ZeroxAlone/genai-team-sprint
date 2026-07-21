@@ -5,6 +5,7 @@ import java.math.RoundingMode;
 import java.util.List;
 import java.util.Map;
 
+import com.fx.transfer.TransferRepository;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -19,10 +20,14 @@ public class ConvertController {
 
     private final JdbcTemplate jdbc;
     private final ConversionService conversionService;
+    private final TransferRepository transferRepository;
 
-    public ConvertController(JdbcTemplate jdbc, ConversionService conversionService) {
+    public ConvertController(JdbcTemplate jdbc,
+                             ConversionService conversionService,
+                             TransferRepository transferRepository) {
         this.jdbc = jdbc;
         this.conversionService = conversionService;
+        this.transferRepository = transferRepository;
     }
 
     @GetMapping("/api/convert")
@@ -52,6 +57,8 @@ public class ConvertController {
         BigDecimal converted = amount.multiply(rate).setScale(2, RoundingMode.HALF_UP);
         BigDecimal fee       = conversionService.calculateFee(converted);
         BigDecimal total     = converted.add(fee);
+
+        transferRepository.addConvertedAmount(converted.toPlainString(), quote.toUpperCase());
 
         return Map.of(
                 "amount",    amount,
