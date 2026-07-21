@@ -1,0 +1,6 @@
+com/fx/web/PageController.class
+com/fx/convert/ConvertController.class
+com/fx/convert/ConversionService.class
+com/fx/transfer/Transfer.class
+com/fx/transfer/TransferRepository.class
+com/fx/transfer/TransferController.class
