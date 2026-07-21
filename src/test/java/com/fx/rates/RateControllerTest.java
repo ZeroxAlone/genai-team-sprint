@@ -89,6 +89,7 @@ class RateControllerTest {
 
         mvc.perform(get("/api/rates/EUR/XXX"))
                 .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.error").exists());
+                                .andExpect(jsonPath("$.error").exists())
+                                .andExpect(jsonPath("$.trace").doesNotExist());
     }
 }
