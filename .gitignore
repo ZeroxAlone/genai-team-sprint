@@ -1,6 +1,4 @@
-
-target
-.mvn
+target/
 .idea/
 *.iml
 .DS_Store
