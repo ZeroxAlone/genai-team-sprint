@@ -1,0 +1,12 @@
+Team:,,,,,,
+Feature,Owner,Branch,Status,PR link,Verified by,Notes
+001 Rates listing,,feat/001-rates,Not started,,,
+002 Single-pair lookup,,feat/002-lookup,Not started,,,
+003 Conversion calculator,,feat/003-convert,Not started,,,
+004 Record & list transfers,,feat/004-transfers,Not started,,,
+005 Validation & error handling,,feat/005-errors,Not started,,,
+006 Account balance check,,feat/006-balance,Not started,,,
+Stretch (write your own spec),,,Not started,,,
+,,,,,,
+Status legend:,Not started / In progress / In review / MERGED / Blocked,,,,,
+Rule:,A feature is MERGED only after a teammate ran the app and ticked every acceptance criterion,,,,,
