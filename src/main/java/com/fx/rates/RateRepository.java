@@ -60,4 +60,18 @@ public class RateRepository {
                 """;
         return jdbc.query(sql, MAPPER, base, quote).stream().findFirst();
     }
+
+    /**
+     * Find full history for a pair ordered oldest -> newest.
+     * Returns [] when pair is unknown.
+     */
+    public List<Rate> findRateHistory(String base, String quote) {
+        String sql = """
+                SELECT base_code, quote_code, rate, DATE_FORMAT(rate_date, '%Y-%m-%d') as rate_date
+                FROM fx_rate
+                WHERE base_code = ? AND quote_code = ?
+                ORDER BY rate_date ASC
+                """;
+        return jdbc.query(sql, MAPPER, base, quote);
+    }
 }

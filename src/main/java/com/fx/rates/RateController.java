@@ -35,5 +35,12 @@ public class RateController {
         String q = quote.toUpperCase();
         return repo.findRate(b, q).orElseThrow(() -> new RateNotFoundException(b, q));
     }
+
+    @GetMapping("/api/rates/{base}/{quote}/history")
+    public List<Rate> history(@PathVariable String base, @PathVariable String quote) {
+        String b = base.toUpperCase();
+        String q = quote.toUpperCase();
+        return repo.findRateHistory(b, q);
+    }
 }
 

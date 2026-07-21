@@ -97,4 +97,23 @@ class RateRepositoryIT {
         Optional<Rate> rate = repo.findRate("EUR", "XXX");
         assertThat(rate).isEmpty();
     }
+
+    @Test
+    void findRateHistoryReturnsEurUsdOldestToNewest() {
+        // 08 AC1/AC2: EUR/USD history is 3 rows, sorted oldest -> newest, ending at 1.0818
+        List<Rate> history = repo.findRateHistory("EUR", "USD");
+
+        assertThat(history).hasSize(3);
+        assertThat(history.get(0).rateDate()).isEqualTo("2026-01-10");
+        assertThat(history.get(1).rateDate()).isEqualTo("2026-01-11");
+        assertThat(history.get(2).rateDate()).isEqualTo("2026-01-12");
+        assertThat(history.get(2).rate()).isEqualTo("1.0818");
+    }
+
+    @Test
+    void findRateHistoryReturnsEmptyForUnknownPair() {
+        // 08 AC3: unknown pair history is empty
+        List<Rate> history = repo.findRateHistory("EUR", "XXX");
+        assertThat(history).isEmpty();
+    }
 }
