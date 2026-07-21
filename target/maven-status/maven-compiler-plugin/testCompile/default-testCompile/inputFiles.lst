@@ -1,9 +1,8 @@
-D:\genai-team-sprint\src\test\java\com\fx\convert\ConversionServiceTest.java
-D:\genai-team-sprint\src\test\java\com\fx\convert\ConvertControllerTest.java
-D:\genai-team-sprint\src\test\java\com\fx\rates\RateControllerTest.java
-D:\genai-team-sprint\src\test\java\com\fx\rates\RateRepositoryIT.java
-D:\genai-team-sprint\src\test\java\com\fx\sample\CurrencyContractTest.java
-D:\genai-team-sprint\src\test\java\com\fx\sample\CurrencyControllerTest.java
-D:\genai-team-sprint\src\test\java\com\fx\sample\CurrencyRepositoryIT.java
-D:\genai-team-sprint\src\test\java\com\fx\stats\StatsControllerTest.java
-D:\genai-team-sprint\src\test\java\com\fx\stats\StatsRepositoryIT.java
+/Users/sunyuanxi/Projects/genai-team-sprint/src/test/java/com/fx/convert/ConversionServiceTest.java
+/Users/sunyuanxi/Projects/genai-team-sprint/src/test/java/com/fx/convert/ConvertControllerTest.java
+/Users/sunyuanxi/Projects/genai-team-sprint/src/test/java/com/fx/rates/RateControllerTest.java
+/Users/sunyuanxi/Projects/genai-team-sprint/src/test/java/com/fx/rates/RateRepositoryIT.java
+/Users/sunyuanxi/Projects/genai-team-sprint/src/test/java/com/fx/sample/CurrencyContractTest.java
+/Users/sunyuanxi/Projects/genai-team-sprint/src/test/java/com/fx/sample/CurrencyControllerTest.java
+/Users/sunyuanxi/Projects/genai-team-sprint/src/test/java/com/fx/sample/CurrencyRepositoryIT.java
+/Users/sunyuanxi/Projects/genai-team-sprint/src/test/java/com/fx/transfer/TransferControllerTest.java

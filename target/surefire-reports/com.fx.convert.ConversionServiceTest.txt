@@ -1,4 +1,8 @@
 -------------------------------------------------------------------------------
 Test set: com.fx.convert.ConversionServiceTest
 -------------------------------------------------------------------------------
+<<<<<<< HEAD
 Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.145 s -- in com.fx.convert.ConversionServiceTest
+=======
+Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.022 s -- in com.fx.convert.ConversionServiceTest
+>>>>>>> origin/main

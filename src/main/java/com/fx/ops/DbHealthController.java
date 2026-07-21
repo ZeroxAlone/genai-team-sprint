@@ -10,13 +10,13 @@ import java.util.Map;
 
 /**
  * DB check + a quick view of what the seed loaded.
- * GET /api/health/db -> {"status":"UP","tables":{"currency":8,"account":20,"fx_rate":30,"transfer":200}}
+ * GET /api/health/db -> {"status":"UP","tables":{"currency":8,"account":20,"fx_rate":30,"transfer":200,"currency_pair":10}}
  * Handy for confirming `docker compose up` seeded fxdb before you start building features.
  */
 @RestController
 public class DbHealthController {
 
-    private static final List<String> TABLES = List.of("currency", "account", "fx_rate", "transfer");
+    private static final List<String> TABLES = List.of("currency", "account", "fx_rate", "transfer", "currency_pair");
 
     private final JdbcTemplate jdbc;
 
