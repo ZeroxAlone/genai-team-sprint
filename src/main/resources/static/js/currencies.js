@@ -2,33 +2,67 @@
 // Shows both halves of the pattern: READ (fetch the list) and WRITE (POST a new row).
 // Copy this file as the template for your feature pages (rates.js, convert.js, ...).
 
+const currencyState = {
+  currencies: [],
+  filterText: ''
+};
+
+function renderCurrencies() {
+  const rows = document.getElementById('rows');
+  const status = document.getElementById('status');
+
+  if (currencyState.currencies.length === 0) {
+    rows.innerHTML = '<tr><td colspan="3" class="status">No currencies found.</td></tr>';
+    status.textContent = '0 currencies loaded from the database.';
+    status.classList.remove('err');
+    return;
+  }
+
+  const filter = currencyState.filterText.trim().toLowerCase();
+  const visibleCurrencies = currencyState.currencies.filter(currency => {
+    if (!filter) {
+      return true;
+    }
+
+    return [currency.code, currency.name, currency.symbol ?? '']
+      .some(value => value.toLowerCase().includes(filter));
+  });
+
+  if (visibleCurrencies.length === 0) {
+    rows.innerHTML = '<tr><td colspan="3" class="status">No currencies match your filter.</td></tr>';
+  } else {
+    rows.innerHTML = visibleCurrencies.map(currency => `
+      <tr>
+        <td class="mono">${currency.code}</td>
+        <td>${currency.name}</td>
+        <td class="sym">${currency.symbol ?? ''}</td>
+      </tr>`).join('');
+  }
+
+  const suffix = filter ? ` Showing ${visibleCurrencies.length} of ${currencyState.currencies.length}.` : '';
+  status.textContent = `${currencyState.currencies.length} currencies loaded from the database.${suffix}`;
+  status.classList.remove('err');
+}
+
 // --- READ: GET /api/currencies and render the table ---
 async function loadCurrencies() {
-  const rows = document.getElementById('rows');
   const status = document.getElementById('status');
   try {
     const res = await fetch('/api/currencies');
     if (!res.ok) throw new Error('HTTP ' + res.status);
-    const currencies = await res.json();
-
-    if (currencies.length === 0) {
-      rows.innerHTML = '<tr><td colspan="3" class="status">No currencies found.</td></tr>';
-      return;
-    }
-
-    rows.innerHTML = currencies.map(c => `
-      <tr>
-        <td class="mono">${c.code}</td>
-        <td>${c.name}</td>
-        <td class="sym">${c.symbol ?? ''}</td>
-      </tr>`).join('');
-    status.textContent = `${currencies.length} currencies loaded from the database.`;
-    status.classList.remove('err');
+    currencyState.currencies = await res.json();
+    renderCurrencies();
   } catch (err) {
+    const rows = document.getElementById('rows');
     rows.innerHTML = '<tr><td colspan="3" class="status err">Could not load currencies.</td></tr>';
     status.textContent = 'Is the app running and the database seeded? Try /api/health/db. (' + err.message + ')';
     status.classList.add('err');
   }
+}
+
+function filterCurrencies(event) {
+  currencyState.filterText = event.target.value;
+  renderCurrencies();
 }
 
 // --- WRITE: POST /api/currencies with a JSON body, then re-read the list ---
@@ -62,4 +96,5 @@ async function addCurrency(event) {
 }
 
 loadCurrencies();
+document.getElementById('currency-filter').addEventListener('input', filterCurrencies);
 document.getElementById('add-form').addEventListener('submit', addCurrency);
